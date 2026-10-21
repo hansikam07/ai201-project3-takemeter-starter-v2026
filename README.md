@@ -41,7 +41,7 @@
 
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
-     
+
 Community: r/books (Reddit)
 
 Candidate distinctions noticed while reading:
@@ -54,41 +54,19 @@ Candidate distinctions noticed while reading:
 
 ## Label Taxonomy
 
-<!-- Each label: a one-sentence definition and two real examples from your
-     reading. Then your decision rule for the hardest boundary.
+### analysis
+Definition: Gives a specific reason, detail, scene, or quote from the book to support its opinion or review.
+Example 1: "I DNF'd Pachinko" post — points to specific issues like lack of character depth and time-skips.
+Example 2: "Dead Weight by Hildur Knútsdóttir" review — discusses specific character details, plot structure, and genre comparisons (e.g. to Glass Houses by Madeline Ashby).
 
-     The decision rule is worth a point on its own and it's the thing most
-     people leave out. Every taxonomy has a hardest boundary. Name yours. -->
-
-### `label_one`
-
-**Definition:**
-
-**Example 1:**
->
-
-**Example 2:**
->
-
-### `label_two`
-
-**Definition:**
-
-**Example 1:**
->
-
-**Example 2:**
->
+### reaction
+Definition: States an opinion, feeling, or verdict about a book with no specific reasoning behind it.
+Example 1: "The Moustache" post — hypes the book with vibes and rhetorical questions, no specific craft reasoning.
+Example 2: "Ann Patchett" appreciation post — lists many books and feelings about them, but no specific reasoning for any one book.
 
 ### The hardest boundary
-
-**Which two labels:**
-
-**The decision rule I used every time:**
-<!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
-     if the tone is heated." -->
-
-
+Which two labels: analysis vs. reaction
+Decision rule: If the post explains the reason for the reader's feelings or review of the book with specific details, scenes, or quotes, it's analysis — even if the post is also emotional or opinion-driven.
 
 ---
 
