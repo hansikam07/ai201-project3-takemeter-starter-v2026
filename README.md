@@ -123,18 +123,18 @@ Say so plainly — the disclosure is required, not penalised. -->
 
 **Base model:** `distilbert-base-uncased`
 
-**Settings:** 3 epochs, learning rate 2e-5, batch size 16, max_length 128, seed 42. Device: `mps` (Apple Silicon GPU), torch 2.14.1.
+**Settings:** 3 epochs, learning rate 2e-5, batch size 16, max_length 128, seed 42. I trained on `mps` (the Apple Silicon GPU), with torch 2.14.1.
 
-**Anything I changed from the defaults, and why:** Nothing — all settings are the notebook's defaults, unchanged.
+**Anything I changed from the defaults, and why:** Nothing. I left every setting at the notebook's default.
 
-**Split sizes:** train 23 · val 5 · test 5 (70/15/15 stratified split of 33 total rows).
+**Split sizes:** train 23, val 5, test 5. That's the standard 70/15/15 stratified split applied to my 33 total rows.
 
 | label | train | val | test |
 |---|---|---|---|
 | analysis | 14 | 3 | 3 |
 | reaction | 9 | 2 | 2 |
 
-Both labels have fewer than 8 examples in the test split (analysis: 3, reaction: 2) — well below the notebook's own 8-example threshold for a trustworthy metric. With only 5 test posts total, a single misclassified example swings accuracy by 20 points and macro F1 by much more, which is exactly what happened here: macro F1 came out to 0.375 (analysis F1 0.75, reaction F1 0.00) because the model predicted "analysis" for every test post. This is a sample-size artifact, not necessarily evidence the model can't learn the boundary — the dataset (33 rows total, well under the 150–200 row target) is simply too small for this split to produce a stable read.
+Both labels ended up with fewer than 8 examples in the test split (3 for analysis, 2 for reaction), so I'm under the notebook's own threshold for a result I can trust. With only 5 posts in the whole test set, getting even one of them wrong swings accuracy by 20 points, and that's basically what happened: macro F1 came out to 0.375, with analysis scoring 0.75 F1 and reaction scoring 0.00. The model just predicted analysis for every test post. I don't think that means the model can't learn the boundary between these two labels. It means my dataset, at 33 rows total and well short of the 150 to 200 target, is too small for this particular split to give a stable answer.
 
 
 
