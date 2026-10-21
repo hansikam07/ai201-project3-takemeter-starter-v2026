@@ -41,7 +41,13 @@
 
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
+     
+Community: r/books (Reddit)
 
+Candidate distinctions noticed while reading:
+1. Some posts name multiple books; most don't.
+2. Some posts discuss reading in general, not a specific book; most don't.
+3. Some posts give specific reasons for their opinion (what made them stop reading, a particular flaw); most just state a reaction/verdict with no backup.
 
 
 ---
