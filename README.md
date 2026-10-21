@@ -121,15 +121,20 @@ Say so plainly — the disclosure is required, not penalised. -->
 
 <!-- Your starting model, your settings, and anything you changed and why. -->
 
-**Base model:**
+**Base model:** `distilbert-base-uncased`
 
-**Settings:** <!-- epochs, learning rate, batch size, seed -->
+**Settings:** 3 epochs, learning rate 2e-5, batch size 16, max_length 128, seed 42. Device: `mps` (Apple Silicon GPU), torch 2.14.1.
 
-**Anything I changed from the defaults, and why:**
+**Anything I changed from the defaults, and why:** Nothing — all settings are the notebook's defaults, unchanged.
 
-**Split sizes:** <!-- train / val / test, and per-label counts in the test
-split. If a label had fewer than about 8 in test, say so — it explains a lot
-of next unit's variance. -->
+**Split sizes:** train 23 · val 5 · test 5 (70/15/15 stratified split of 33 total rows).
+
+| label | train | val | test |
+|---|---|---|---|
+| analysis | 14 | 3 | 3 |
+| reaction | 9 | 2 | 2 |
+
+Both labels have fewer than 8 examples in the test split (analysis: 3, reaction: 2) — well below the notebook's own 8-example threshold for a trustworthy metric. With only 5 test posts total, a single misclassified example swings accuracy by 20 points and macro F1 by much more, which is exactly what happened here: macro F1 came out to 0.375 (analysis F1 0.75, reaction F1 0.00) because the model predicted "analysis" for every test post. This is a sample-size artifact, not necessarily evidence the model can't learn the boundary — the dataset (33 rows total, well under the 150–200 row target) is simply too small for this split to produce a stable read.
 
 
 
