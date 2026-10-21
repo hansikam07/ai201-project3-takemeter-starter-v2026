@@ -51,64 +51,35 @@ whether you hit them:
 
 ---
 
-## 1.
+## 1. Overall accuracy
 
-<!-- Your criterion. It must name a number. -->
+Overall accuracy on the held-out test set is at least 0.73.
 
+**Why this target:** I picked 73% because it shows the model is clearly identifying the labels beyond chance (50% for two labels), while still accounting for the ambiguity in natural language that makes some posts hard to classify even for a human.
 
+## 2. Per-label F1
 
-**Why this target:**
+F1 for `analysis` is at least 0.70, and F1 for `reaction` is at least 0.65.
 
+**Why this target:** I set a slightly lower target for `reaction` because it's vaguer than `analysis` — without a specific detail or quote to anchor it, there's more room for borderline judgment calls, so I expect the model to have a slightly harder time with it.
 
+## 3. Balance
 
----
+No label exceeds 60% of the dataset.
 
-## 2.
+**Why this target:** I set this tighter than the required 70% ceiling because I want a more even split, so the model is forced to actually learn both labels instead of leaning toward whichever one is more common.
 
-<!-- Your criterion. -->
+## 4. Consistency (self-agreement)
 
+If I relabeled the same 20 cold-labeled posts again later, I'd agree with my original labels at least 70% of the time.
 
+**Why this target:** I picked 70% rather than something closer to 100% because the analysis/reaction boundary is genuinely subjective in places, so I expect some of my own calls to shift on a second pass.
 
-**Why this target:**
+## 5. Accuracy on cold-labeled posts
 
+The model's accuracy on just the 20 cold-labeled posts is at least 0.65.
 
-
----
-
-## 3.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
-
-
----
-
-## 4.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
-
-
----
-
-## 5.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
-
-
+**Why this target:** These are the posts I labeled without any help or tools, so they're my most honest signal of how I actually apply the taxonomy — if the model struggles here, it's likely struggling with the same ambiguity I do.
 ---
 
 <!-- ─────────────────────────────────────────────────────────────────────────
