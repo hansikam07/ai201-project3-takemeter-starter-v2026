@@ -177,18 +177,16 @@ Both labels ended up with fewer than 8 examples in the test split (3 for analysi
 
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy |  |  |  |
-| Macro F1 |  |  |  |
-| F1 — `label_one` |  |  |  |
-| F1 — `label_two` |  |  |  |
+| Overall accuracy | 0.600 | 0.600 | +0.000 |
+| Macro F1 | 0.583 | 0.375 | -0.208 |
+| F1 - `analysis` | 0.500 | 0.750 | +0.250 |
+| F1 - `reaction` | 0.667 | 0.000 | -0.667 |
 
-**What I predicted before I looked:**
-<!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
-     prediction made afterwards isn't one. -->
+Both models were scored on the same 5 held-out posts in test_split.csv (3 analysis, 2 reaction). The baseline is facebook/bart-large-mnli, zero-shot, using the definitions in label_definitions.txt. The trained model is distilbert-base-uncased, seed 42.
 
-**What the gap actually means:**
-<!-- If the baseline matched your trained model, your fine-tuning added
-     nothing — and that is a real finding, not a failure. Say it plainly. -->
+**What I predicted before I looked:** I did not record a prediction before seeing the numbers, so I have none to report.
+
+**What the gap actually means:** Fine-tuning added nothing on accuracy: both models got 3 of 5 right. The trained model was worse on macro F1 (0.375 vs 0.583) because it predicted `analysis` for every test post, which gives it F1 0.000 on `reaction`. The baseline caught both `reaction` posts but missed 2 of 3 `analysis` posts. With only 5 test posts, a single prediction moves accuracy by 20 points, so this comparison is weak evidence either way.
 
 
 
@@ -201,27 +199,24 @@ Both labels ended up with fewer than 8 examples in the test split (3 for analysi
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | >= 0.73 | 0.600 | 0.600 | 0.800 | MISSED |
+| 2. Per-label F1 | analysis >= 0.70 and reaction >= 0.65 | analysis 0.750 / reaction 0.000 | analysis 0.750 / reaction 0.000 | analysis 0.857 / reaction 0.667 | MISSED |
+| 3. Balance | no label > 60% | analysis 60.6% | analysis 60.6% | analysis 60.6% | MISSED |
+| 4. Self-agreement on 20 cold posts | >= 70% | not measured | not measured | not measured | MISSED (not measured) |
+| 5. Model accuracy on 20 cold posts | >= 0.65 | not measured | not measured | not measured | MISSED (not measured) |
+
+Balance is a property of the whole dataset (20 analysis, 13 reaction out of 33), so it is the same on every seed.
 
 ### Confusion matrix
 
-<!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
-     An image of a matrix earns nothing. -->
+Seed 42. Seed 7 gave the same matrix.
 
-| true \ predicted |  |  |  |
-|---|---|---|---|
-| **** |  |  |  |
-| **** |  |  |  |
-| **** |  |  |  |
+| true \ predicted | analysis | reaction |
+|---|---|---|
+| **analysis** | 3 | 0 |
+| **reaction** | 2 | 0 |
 
-**My biggest off-diagonal number, and what it means:**
-<!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
-     direction. "7 real analysis posts were called hot_take and only 3 went the
-     other way" is a direction, not just an error rate. -->
+**My biggest off-diagonal number, and what it means:** 2 real reaction posts were called analysis, and 0 analysis posts were called reaction. On seeds 42 and 7 the model predicted analysis for every test post, so it never learned the reaction side of the boundary and leaned toward the majority label.
 
 
 
@@ -234,11 +229,11 @@ Both labels ended up with fewer than 8 examples in the test split (3 for analysi
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Overall accuracy | >= 0.73 | MISSED | Seeds gave 0.600, 0.600, 0.800. The target has to hold on all three seeds, and only one is above it, and that one is still above only because of a lucky split. |
+| 2 | Per-label F1 | analysis >= 0.70, reaction >= 0.65 | MISSED | Reaction F1 was 0.000 on seeds 42 and 7 and 0.667 on seed 2024. Analysis F1 held (0.750, 0.750, 0.857), but reaction missed on two of three seeds. |
+| 3 | Balance | no label > 60% | MISSED | 20 analysis out of 33 rows is 60.6%, just over the 60% ceiling. |
+| 4 | Self-agreement on 20 cold posts | >= 70% | MISSED (not measured) | I never re-labeled a set of 20 cold posts, and nothing in labels.csv marks which posts were cold, so no number exists. |
+| 5 | Model accuracy on 20 cold posts | >= 0.65 | MISSED (not measured) | No cold subset is identified in labels.csv, so accuracy on it can't be computed. |
 
 **Diagnoses**
 
@@ -251,7 +246,11 @@ Both labels ended up with fewer than 8 examples in the test split (3 for analysi
      have that can tell a LABELLING problem from a MODEL problem, and this
      section is graded on whether you used it that way. -->
 
+**Criteria 1 and 2 (accuracy and reaction F1): too few examples, and a very small test set.** The dataset is 33 rows, well short of the 150-200 target, and the test split is 5 posts (3 analysis, 2 reaction), so one prediction moves accuracy by 20 points. Evidence: the three seeds ranged from 0.600 to 0.800, a 20-point spread. On seeds 42 and 7 the confusion matrix shows the model predicted analysis for every test post (2 reaction posts called analysis, 0 correct), so it never learned reaction. Reaction had only 9 training rows. It is not a training-time problem: raising epochs from 3 to 10 gave identical numbers on all three seeds (see The Improvement). And it is not an impossible task, because the zero-shot baseline with no training got reaction F1 0.667 on the same posts. I have not yet checked whether my labels were applied inconsistently at the analysis/reaction boundary, because I don't have the staff comparison yet, so I can't rule that out.
 
+**Criterion 3 (balance): dataset composition.** 20 of 33 posts are analysis (60.6%), a miss of 0.6 percentage points. It matters because the model leaned toward the majority label (analysis) on two of three seeds.
+
+**Criteria 4 and 5 (cold-post criteria): the criteria couldn't be measured from my records.** I think I labeled about 20 posts cold, but labels.csv marks every row as ai-prelabeled-reviewed and has no column identifying the cold ones. The criteria depend on a group I can't identify from the data, so I could not compute either number. I did not revise these criteria in criteria.md.
 
 ---
 
@@ -311,21 +310,25 @@ Both labels ended up with fewer than 8 examples in the test split (3 for analysi
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** One setting: epochs, from 3 to 10 (EPOCHS = 10 in the notebook, passed into train_model by the section 6 three-seed loop). I changed nothing else: same labels, same data, same learning rate (2e-5), same batch size (16), same seeds. The results JSON files don't record the epoch count, so I confirmed the setting from the notebook code.
 
-**Which diagnosis pointed at it:**
+**Which diagnosis pointed at it:** On seeds 42 and 7 the model predicted analysis for every test post, giving reaction F1 0.000. With 23 training rows and batch size 16, 3 epochs is only about 6 optimizer steps, so I suspected the model simply hadn't trained long enough to separate reaction from analysis. Of my diagnoses, this was the only one a training setting could address. I did not change labels or data because those are frozen this unit.
 
 ### Run Log — After
 
+Device: mps (Apple Silicon GPU), torch 2.14.1. Training settings: 10 epochs.
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | >= 0.73 | 0.600 | 0.600 | 0.800 | MISSED |
+| 2. Per-label F1 | analysis >= 0.70 and reaction >= 0.65 | analysis 0.750 / reaction 0.000 | analysis 0.750 / reaction 0.000 | analysis 0.857 / reaction 0.667 | MISSED |
+| 3. Balance | no label > 60% | analysis 60.6% | analysis 60.6% | analysis 60.6% | MISSED |
+| 4. Self-agreement on 20 cold posts | >= 70% | not measured | not measured | not measured | MISSED (not measured) |
+| 5. Model accuracy on 20 cold posts | >= 0.65 | not measured | not measured | not measured | MISSED (not measured) |
 
-**Did it help, and how do I know:**
+The confusion matrix for seed 42 was identical to the before run (analysis row 3/0, reaction row 2/0).
+
+**Did it help, and how do I know:** No. Accuracy, macro F1, and per-label F1 were identical to the 3-epoch run on all three seeds (accuracy 0.600, 0.600, 0.800; reaction F1 0.000, 0.000, 0.667). So training time was not the bottleneck: the model reached the same predictions by epoch 3, and more epochs changed nothing. That points back at the data (only 9 reaction training rows and 5 test posts) rather than training. With a 5-post test set, a small real change could also be invisible, so I can't rule out a tiny effect. I'd try adding reaction examples next, but I did not do that this unit.
 
 <!-- If it didn't, say so. Relabelling that didn't help is a genuinely
      interesting result and earns full credit. -->
@@ -338,10 +341,13 @@ Both labels ended up with fewer than 8 examples in the test split (3 for analysi
 
 <!-- For each criterion still missed: what you'd do, and why you stopped. -->
 
+- **Criterion 1 (accuracy >= 0.73) and criterion 2 (reaction F1 >= 0.65):** Still missed. Next I would add more reaction posts (I only have 13 in total, 9 in training) and enlarge the test split so one post doesn't swing accuracy by 20 points. I stopped because labels and data are frozen this unit, and I ran out of time.
+- **Criterion 3 (balance, no label > 60%):** Still missed at 60.6% analysis (20 of 33). Adding about 3 more reaction posts would fix it. I stopped for the same reason: the data is frozen this unit.
+- **Criteria 4 and 5 (cold-post criteria):** Still not measured. I would mark the cold-labeled posts in labels.csv, or re-label a fresh set of 20 without AI help, and then compute both numbers. I stopped because I can't identify which posts were cold.
+- **Agreement report:** Not done yet. I still need the staff labels from my TF, and I haven't run the agreement check, so I haven't tested whether I applied the analysis/reaction boundary consistently.
 
+**The gap between what I meant my labels to capture and what the model learned:** I meant analysis to mean "gives a specific reason, detail, scene, or quote" and reaction to mean "a feeling or verdict with no specific reasoning." The confusion matrix shows the model learned neither side of that boundary on seeds 42 and 7: it called every test post analysis, including both reaction posts (2 reaction posts called analysis, 0 correct). It most likely learned "analysis is the common label" rather than the specific-detail rule, because it had only 9 reaction examples to learn from.
 
-**The gap between what I meant my labels to capture and what the model
-learned:**
 <!-- Two sentences. Your confusion matrix is the evidence. -->
 
 
