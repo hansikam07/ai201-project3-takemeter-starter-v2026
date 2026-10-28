@@ -352,7 +352,7 @@ From results.json (seed 42, 3 epochs trained model):
 - accuracy_least_confident_third: 0.000
 - n_per_third: 1
 
-Confident predictions were right more often than unsure ones (1.000 vs 0.000), but each third contains only 1 post, so this is very weak evidence.
+The model's average confidence was nearly identical when right (0.553) and when wrong (0.548), so its confidence did not meaningfully separate right from wrong answers. The confident-third vs unsure-third accuracy (1.000 vs 0.000) rests on 1 post per third, so it is not reliable evidence.
 
 ### Per-label error write-up for reaction
 
