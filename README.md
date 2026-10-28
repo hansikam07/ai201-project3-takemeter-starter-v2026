@@ -197,6 +197,8 @@ Both models were scored on the same 5 held-out posts in test_split.csv (3 analys
 <!-- Five criteria across three seeds. The notebook's section 6 prints the
      spread table; the Target and Verdict columns are yours. -->
 
+Device: mps (Apple Silicon GPU), torch 2.14.1. Training: 3 epochs.
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
 | 1. Overall accuracy | >= 0.73 | 0.600 | 0.600 | 0.800 | MISSED |
