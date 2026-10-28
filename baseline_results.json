@@ -1,0 +1,53 @@
+{
+  "model": "facebook/bart-large-mnli",
+  "n": 5,
+  "seed": 42,
+  "held_out": true,
+  "used_definitions": true,
+  "scores": {
+    "n": 5,
+    "accuracy": 0.6,
+    "f1_macro": 0.5833333333333333,
+    "per_label": {
+      "analysis": {
+        "precision": 1.0,
+        "recall": 0.3333333333333333,
+        "f1": 0.5,
+        "support": 3
+      },
+      "reaction": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "support": 2
+      }
+    }
+  },
+  "predictions": [
+    {
+      "text": "Do you buy books from Barnes & Noble? The books cost near list price both in store and online, not offering savings compared to an independent bookstore. A new hardcover of Yesteryear is $14.99 on Amazon, half the price of the $30 it costs at B&N in store. Is it catering to impulse purchases?",
+      "gold": "analysis",
+      "predicted": "reaction"
+    },
+    {
+      "text": "In the Shadow of Eight of Collin Gosselin: thoughts and feelings. Just finished this memoir, narrated by Collin himself. It was absolutely devastating. I don't usually cry at books but I cried a couple times. I will no longer be supporting TLC by watching their shows.",
+      "gold": "reaction",
+      "predicted": "reaction"
+    },
+    {
+      "text": "People who DNF or dislike books because they dislike the characters: why? I've never had to like characters to enjoy a story. The only thing a character has to be is well written. Sadie and Sam from Tomorrow, Tomorrow, and Tomorrow were both assholes but very real, believable characters. Marx was a nice guy but a much less well written character.",
+      "gold": "analysis",
+      "predicted": "reaction"
+    },
+    {
+      "text": "Is American Psycho still the American Psycho? Yes. It's insane how relevant a story published in the early 90s as a reaction against consumerist Wall-Street culture is more relevant today than ever. Reading it puts you in direct dialogue with Bateman's inner monologue, his actual headspace, juxtaposed with how everybody around him treats him. That inner monologue is fascinating because it's such a deeply private, personal thing that is both horrifying and humanizing.",
+      "gold": "analysis",
+      "predicted": "analysis"
+    },
+    {
+      "text": "Only a week until the new Vollmann! The new Vollmann, a table for fortune, drops next week on four volumes and 3k pages. Should get it the day after my birthday, excited! I pre-ordered for $140 a few months ago, it hits at $200 even.",
+      "gold": "reaction",
+      "predicted": "reaction"
+    }
+  ]
+}

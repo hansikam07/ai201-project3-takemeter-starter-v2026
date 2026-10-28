@@ -5,6 +5,5 @@
 #
 # Delete the examples below and put yours in.
 
-analysis: makes an argument backed by a specific, checkable fact
-hot_take: a confident claim with no support offered
-reaction: an immediate response to something that just happened
+analysis: Gives a specific reason, detail, scene, or quote from the book to support its opinion or review.
+reaction: States an opinion, feeling, or verdict about a book with no specific reasoning behind it.
