@@ -339,6 +339,12 @@ The confusion matrix for seed 42 was identical to the before run (analysis row 3
 
 ---
 
+## Stretch
+
+Stretch features I am adding: (1) a confidence check, (2) a per-label error write-up for reaction, the worst label.
+
+---
+
 ## What's Still Broken
 
 <!-- For each criterion still missed: what you'd do, and why you stopped. -->
