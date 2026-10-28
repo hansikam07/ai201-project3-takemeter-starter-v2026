@@ -343,6 +343,27 @@ The confusion matrix for seed 42 was identical to the before run (analysis row 3
 
 Stretch features I am adding: (1) a confidence check, (2) a per-label error write-up for reaction, the worst label.
 
+### Confidence check
+
+From results.json (seed 42, 3 epochs trained model):
+- mean_when_right: 0.553
+- mean_when_wrong: 0.548
+- accuracy_most_confident_third: 1.000
+- accuracy_least_confident_third: 0.000
+- n_per_third: 1
+
+Confident predictions were right more often than unsure ones (1.000 vs 0.000), but each third contains only 1 post, so this is very weak evidence.
+
+### Per-label error write-up for reaction
+
+Reaction is the worst label (F1 0.000). Both reaction test posts were predicted as analysis. Reading the two posts from baseline_results.json (gold = reaction):
+
+**Post 1:** "In the Shadow of Eight of Collin Gosselin: thoughts and feelings. Just finished this memoir, narrated by Collin himself. It was absolutely devastating. I don't usually cry at books but I cried a couple times. I will no longer be supporting TLC by watching their shows."
+
+**Post 2:** "Only a week until the new Vollmann! The new Vollmann, a table for fortune, drops next week on four volumes and 3k pages. Should get it the day after my birthday, excited! I pre-ordered for $140 a few months ago, it hits at $200 even."
+
+Both posts are first-person and emotional. Both mention concrete details (a named memoir "Collin Gosselin" and a TV show "TLC" in post 1; a named author "Vollmann", specific count "four volumes and 3k pages", and prices "$140" and "$200" in post 2). The details are present but not used to argue anything — no reasoning is given. This analysis is based on 2 posts.
+
 ---
 
 ## What's Still Broken
